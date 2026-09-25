@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/quality-uncertainty-medrag/claim_prediction.schema.json",
+  "title": "Claim-level pipeline prediction",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "question_id",
+    "option_index",
+    "option_label",
+    "option_text",
+    "decision",
+    "support_weight",
+    "contradict_weight",
+    "irrelevant_count",
+    "evidence_count",
+    "evidence"
+  ],
+  "properties": {
+    "question_id": {"type": "string", "minLength": 1},
+    "option_index": {"type": "integer", "minimum": 0},
+    "option_label": {"type": "string", "minLength": 1},
+    "option_text": {"type": "string", "minLength": 1},
+    "decision": {"enum": ["SUPPORT", "CONTRADICT", "IRRELEVANT"]},
+    "support_weight": {"type": "number"},
+    "contradict_weight": {"type": "number"},
+    "irrelevant_count": {"type": "integer", "minimum": 0},
+    "evidence_count": {"type": "integer", "minimum": 0},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["doc_id", "rank", "quality", "stance"],
+        "properties": {
+          "doc_id": {"type": "string", "minLength": 1},
+          "rank": {"type": "integer", "minimum": 1},
+          "quality": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["value", "components"],
+            "properties": {
+              "value": {"type": "number", "minimum": 0, "maximum": 1},
+              "components": {
+                "type": "object",
+                "additionalProperties": {"type": "number"}
+              }
+            }
+          },
+          "stance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["SUPPORT", "CONTRADICT", "IRRELEVANT"],
+            "properties": {
+              "SUPPORT": {"type": "number", "minimum": 0, "maximum": 1},
+              "CONTRADICT": {"type": "number", "minimum": 0, "maximum": 1},
+              "IRRELEVANT": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/quality-uncertainty-medrag/medqa_question.schema.json",
+  "title": "MedQA-style question record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["question", "options", "answer"],
+  "anyOf": [{"required": ["id"]}, {"required": ["question_id"]}],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "question_id": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1},
+    "options": {
+      "oneOf": [
+        {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+        {
+          "type": "object",
+          "minProperties": 2,
+          "propertyNames": {"minLength": 1},
+          "additionalProperties": {"type": "string", "minLength": 1}
+        }
+      ]
+    },
+    "answer": {"oneOf": [{"type": "string"}, {"type": "integer", "minimum": 0}]},
+    "relevant_doc_ids": {"type": "array", "items": {"type": "string"}},
+    "metadata": {"type": "object"}
+  }
+}

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quality-uncertainty-medrag"
+version = "0.1.0"
+description = "Lightweight baselines for medical RAG with conflicting evidence"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["PyYAML>=6,<7"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7,<10"]
+
+[project.scripts]
+quality-medrag-run = "quality_uncertainty_medrag.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+

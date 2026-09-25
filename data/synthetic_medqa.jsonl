@@ -1,0 +1,3 @@
+{"id":"q1","question":"In the fictional Northlake dataset, which option is the recommended first-line intervention?","options":{"A":"Intervention Alpha","B":"Intervention Beta","C":"No intervention","D":"Intervention Delta"},"answer":"B","relevant_doc_ids":["q1-guideline","q1-rct"]}
+{"id":"q2","question":"In the fictional Hillcrest dataset, which option is supported for syndrome Y?","options":{"A":"Therapy One","B":"Therapy Two","C":"Therapy Three","D":"Therapy Four"},"answer":"A","relevant_doc_ids":["q2-review","q2-cohort"]}
+{"id":"q3","question":"In the fictional Riverside dataset, which option should be selected for condition Z?","options":{"A":"Plan Red","B":"Plan Blue","C":"Plan Green","D":"Plan Gold"},"answer":"C","relevant_doc_ids":[]}

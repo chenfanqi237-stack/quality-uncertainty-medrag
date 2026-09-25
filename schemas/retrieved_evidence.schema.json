@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/quality-uncertainty-medrag/retrieved_evidence.schema.json",
+  "title": "Retrieved evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "question_id",
+    "doc_id",
+    "rank",
+    "text",
+    "source",
+    "evidence_type",
+    "retrieval_score"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "question_id": {"type": "string", "minLength": 1},
+    "doc_id": {"type": "string", "minLength": 1},
+    "rank": {"type": "integer", "minimum": 1},
+    "text": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "evidence_type": {
+      "enum": [
+        "meta_analysis",
+        "systematic_review",
+        "evidence_based_guideline",
+        "randomized_controlled_trial",
+        "non_randomized_controlled_trial",
+        "cohort_study",
+        "case_series_or_study",
+        "individual_case_report",
+        "expert_opinion",
+        "other"
+      ]
+    },
+    "retrieval_score": {"type": "number"},
+    "annotated_stances": {
+      "description": "Optional fixture labels keyed by candidate option. Production retrieval need not provide them.",
+      "type": "object",
+      "additionalProperties": {"enum": ["SUPPORT", "CONTRADICT", "IRRELEVANT"]}
+    },
+    "metadata": {"type": "object"}
+  }
+}

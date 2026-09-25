@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/quality-uncertainty-medrag/candidate_claim.schema.json",
+  "title": "Candidate claim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["question_id", "option_index", "option_label", "option_text"],
+  "properties": {
+    "question_id": {"type": "string", "minLength": 1},
+    "option_index": {"type": "integer", "minimum": 0},
+    "option_label": {"type": "string", "minLength": 1},
+    "option_text": {"type": "string", "minLength": 1}
+  }
+}
+
