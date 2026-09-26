@@ -11,7 +11,7 @@ from typing import Sequence
 import yaml
 
 from .aggregation import QualityWeightedVoteAggregator
-from .evaluation import evaluate_pipeline
+from .evaluation import evaluate_retrieval
 from .loaders import load_medqa_questions, load_retrieved_evidence
 from .pipeline import BaselinePipeline
 from .quality import ConfiguredEvidenceTypeScorer
@@ -75,11 +75,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         top_k=top_k,
     )
     results = [
-        pipeline.run(question, claim)
+        result
         for question in questions
-        for claim in question.candidate_claims
+        for result in pipeline.run_question(question)
     ]
-    summary = evaluate_pipeline(questions, results, k=top_k)
+    summary = evaluate_retrieval(questions, results, k=top_k)
 
     effective_config = {
         **config,
@@ -126,11 +126,13 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     logger.info("questions=%d seed=%d top_k=%d", len(questions), seed, top_k)
     logger.info(
-        "claims=%d mrr=%.3f hit@%d=%.3f",
+        "claims=%d retrieval_evaluated_question_count=%d "
+        "retrieval_mrr_at_k=%s retrieval_hit_at_k=%s retrieval_k=%d",
         summary.claim_count,
-        summary.mean_reciprocal_rank,
-        top_k,
-        summary.hit_at_k,
+        summary.retrieval_evaluated_question_count,
+        summary.retrieval_mrr_at_k,
+        summary.retrieval_hit_at_k,
+        summary.retrieval_k,
     )
     logger.info("wrote outputs to %s", output_dir)
     return 0

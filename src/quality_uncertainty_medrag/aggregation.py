@@ -2,33 +2,60 @@
 
 from __future__ import annotations
 
+import math
 from typing import Sequence
 
-from .models import AggregationResult, CandidateClaim, MedicalQuestion, ScoredEvidence, Stance
+from .models import (
+    AggregationDecision,
+    AggregationResult,
+    CandidateClaim,
+    MedicalQuestion,
+    ScoredEvidence,
+    Stance,
+)
+
+
+WEIGHT_TIE_ABS_TOLERANCE = 1e-12
 
 
 class QualityWeightedVoteAggregator:
     """Compare summed quality for supporting and contradicting evidence.
 
-    IRRELEVANT evidence contributes no weight. A tie or no directional
-    evidence returns IRRELEVANT as the baseline's abstention state. This is a
+    IRRELEVANT evidence and unresolved stance ties contribute no weight. A tie
+    or no directional evidence returns AggregationDecision.ABSTAIN. This is a
     transparent comparison baseline, not an uncertainty-aware method.
     """
 
     def aggregate(
         self, question: MedicalQuestion, claim: CandidateClaim, evidence: Sequence[ScoredEvidence]
     ) -> AggregationResult:
-        support = sum(item.quality.value for item in evidence if item.stance.label is Stance.SUPPORT)
-        contradict = sum(
-            item.quality.value for item in evidence if item.stance.label is Stance.CONTRADICT
-        )
-        irrelevant = sum(item.stance.label is Stance.IRRELEVANT for item in evidence)
-        if support > contradict:
-            decision = Stance.SUPPORT
-        elif contradict > support:
-            decision = Stance.CONTRADICT
+        support_values: list[float] = []
+        contradict_values: list[float] = []
+        irrelevant = 0
+        for item in evidence:
+            label = item.stance.label
+            if label is None:
+                continue
+            if label is Stance.SUPPORT:
+                support_values.append(item.quality.value)
+            elif label is Stance.CONTRADICT:
+                contradict_values.append(item.quality.value)
+            elif label is Stance.IRRELEVANT:
+                irrelevant += 1
+
+        support = math.fsum(support_values)
+        contradict = math.fsum(contradict_values)
+        if math.isclose(
+            support,
+            contradict,
+            rel_tol=0.0,
+            abs_tol=WEIGHT_TIE_ABS_TOLERANCE,
+        ):
+            decision = AggregationDecision.ABSTAIN
+        elif support > contradict:
+            decision = AggregationDecision.SUPPORT
         else:
-            decision = Stance.IRRELEVANT
+            decision = AggregationDecision.CONTRADICT
         return AggregationResult(
             claim=claim,
             decision=decision,

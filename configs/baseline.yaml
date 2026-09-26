@@ -12,15 +12,15 @@ quality:
   scorer_name: configured-evidence-type-baseline
   evidence_type_scores:
     meta_analysis: 1.0
-    systematic_review: 0.9
-    evidence_based_guideline: 0.8
-    randomized_controlled_trial: 0.7
-    non_randomized_controlled_trial: 0.6
-    cohort_study: 0.5
-    case_series_or_study: 0.4
-    individual_case_report: 0.3
-    expert_opinion: 0.2
-    other: 0.1
+    systematic_review: 0.8888888889
+    evidence_based_guideline: 0.7777777778
+    randomized_controlled_trial: 0.6666666667
+    non_randomized_controlled_trial: 0.5555555556
+    cohort_study: 0.4444444444
+    case_series_or_study: 0.3333333333
+    individual_case_report: 0.2222222222
+    expert_opinion: 0.1111111111
+    other: 0.0
 
 logging:
   level: INFO

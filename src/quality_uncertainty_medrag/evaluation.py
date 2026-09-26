@@ -1,4 +1,4 @@
-"""Evaluation utilities for baseline decisions, answers, and retrieval ranking."""
+"""Separate evaluation utilities for retrieval ranking and question answers."""
 
 from __future__ import annotations
 
@@ -9,14 +9,17 @@ from .models import MedicalQuestion, PipelineResult, QuestionPrediction
 
 
 @dataclass(frozen=True)
-class EvaluationSummary:
+class RetrievalEvaluationSummary:
+    """Retrieval metrics over questions with relevant-document annotations."""
+
     question_count: int
     claim_count: int
-    mean_reciprocal_rank: float
-    hit_at_k: float
-    k: int
+    retrieval_evaluated_question_count: int
+    retrieval_mrr_at_k: float | None
+    retrieval_hit_at_k: float | None
+    retrieval_k: int
 
-    def to_dict(self) -> dict[str, int | float]:
+    def to_dict(self) -> dict[str, int | float | None]:
         return asdict(self)
 
 
@@ -53,9 +56,16 @@ def question_prediction_accuracy(
     return correct / len(questions)
 
 
-def evaluate_pipeline(
+def evaluate_retrieval(
     questions: Sequence[MedicalQuestion], results: Sequence[PipelineResult], *, k: int
-) -> EvaluationSummary:
+) -> RetrievalEvaluationSummary:
+    """Score retrieval once per annotated question, independently of answers.
+
+    Candidate claims share a retrieval pool, so its ordering is read from the
+    first claim. Questions without gold document IDs are not evaluated. If no
+    questions have annotations, the metrics are unavailable and returned as None.
+    """
+
     if k < 1 or not questions:
         raise ValueError("k must be positive and questions must not be empty")
     by_key: Mapping[tuple[str, str], PipelineResult] = {
@@ -71,8 +81,12 @@ def evaluate_pipeline(
 
     reciprocal_rank_total = 0.0
     hit_total = 0
+    evaluated_question_count = 0
     for question in questions:
         relevant = set(question.relevant_doc_ids)
+        if not relevant:
+            continue
+        evaluated_question_count += 1
         first_claim = question.candidate_claims[0]
         claim_result = by_key[(question.question_id, first_claim.option_label)]
         ranked_ids = [item.evidence.doc_id for item in claim_result.evidence]
@@ -83,10 +97,16 @@ def evaluate_pipeline(
             reciprocal_rank_total += 1 / first
             hit_total += first <= k
 
-    return EvaluationSummary(
+    return RetrievalEvaluationSummary(
         question_count=len(questions),
         claim_count=len(results),
-        mean_reciprocal_rank=reciprocal_rank_total / len(questions),
-        hit_at_k=hit_total / len(questions),
-        k=k,
+        retrieval_evaluated_question_count=evaluated_question_count,
+        retrieval_mrr_at_k=(
+            reciprocal_rank_total / evaluated_question_count
+            if evaluated_question_count else None
+        ),
+        retrieval_hit_at_k=(
+            hit_total / evaluated_question_count if evaluated_question_count else None
+        ),
+        retrieval_k=k,
     )
