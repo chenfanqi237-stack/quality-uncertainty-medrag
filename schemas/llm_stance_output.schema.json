@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Final LLM stance probability distribution",
+  "$comment": "Runtime parsing additionally rejects duplicate keys and enforces sum=1 within absolute tolerance 1e-6, without renormalization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["SUPPORT", "CONTRADICT", "IRRELEVANT"],
+  "properties": {
+    "SUPPORT": {"type": "number", "minimum": 0, "maximum": 1},
+    "CONTRADICT": {"type": "number", "minimum": 0, "maximum": 1},
+    "IRRELEVANT": {"type": "number", "minimum": 0, "maximum": 1}
+  }
+}

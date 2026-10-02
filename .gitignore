@@ -8,3 +8,13 @@ dist/
 outputs/*
 !outputs/.gitkeep
 .idea
+data/cache/
+
+# Generated cloud upload copies and credentials
+cloud/kaggle_input/
+cloud/kaggle_upload.zip
+.ipynb_checkpoints/
+.env
+.env.*
+kaggle.json
+access_token

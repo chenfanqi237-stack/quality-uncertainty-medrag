@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LLM stance model input (no identifiers, other options or gold)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["question_stem", "candidate_option_text", "evidence_title", "evidence_abstract"],
+  "properties": {
+    "question_stem": {"type": "string", "pattern": "\\S"},
+    "candidate_option_text": {"type": "string", "pattern": "\\S"},
+    "evidence_title": {"type": "string", "pattern": "\\S"},
+    "evidence_abstract": {"type": "string"}
+  }
+}

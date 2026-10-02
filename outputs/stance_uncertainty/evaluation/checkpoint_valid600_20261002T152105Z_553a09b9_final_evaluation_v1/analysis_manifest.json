@@ -1,0 +1,152 @@
+{
+  "aggregation_preparation": {
+    "end_to_end_medqa_answer_evaluation_run": false,
+    "evidence_per_question_option": {
+      "1": 40,
+      "2": 10
+    },
+    "methods": [
+      {
+        "description": "One directional vote per hard stance; IRRELEVANT contributes no direction.",
+        "name": "unweighted_hard_stance_majority"
+      },
+      {
+        "description": "Sum frozen evidence-quality scores by hard directional stance.",
+        "name": "quality_weighted_hard_stance"
+      },
+      {
+        "description": "Use frozen q*(1-H3) weights with soft SUPPORT-minus-CONTRADICT direction.",
+        "name": "quality_uncertainty_weighted_soft_stance"
+      }
+    ],
+    "missing_required_quality_metadata": [
+      "evidence_type_or_frozen_quality_score"
+    ],
+    "precise_gap": "The frozen 60-pair input projection has neither evidence_type metadata (needed by the existing frozen quality scorer) nor a frozen quality_score. It is a stance-reference subset (50 question-option groups), not a declared complete retrieval-evidence set for every answer option. Quality-weighted aggregation cannot be compared without the frozen evidence grouping and quality metadata.",
+    "question_option_group_count": 50,
+    "ready_for_comparable_experiment": false,
+    "same_input_evidence_enforced": true,
+    "shared_interface": "aggregate_with_shared_evidence(question, claim, evidence)"
+  },
+  "analysis_timestamp": "2026-10-02T15:21:05.258506+00:00",
+  "artifacts": [
+    "sample_completeness.csv",
+    "pair_uncertainty.csv",
+    "uncertainty_evaluation.json",
+    "risk_coverage.csv",
+    "analysis_manifest.json",
+    "evaluation_summary.md"
+  ],
+  "checkpoint": {
+    "filename": "checkpoint_valid600_20261002T152105Z_553a09b9.zip",
+    "manifest_status": {
+      "completion_percentage": 100.0,
+      "expected": 600,
+      "failed": 0,
+      "missing": 0,
+      "valid": 600
+    },
+    "sha256": "356cdb4f30de17952e22176bc6127b41384bae3a795baf8c3724612162ee4f34",
+    "validated_status": {
+      "completion_percentage": 100.0,
+      "expected": 600,
+      "failed": 0,
+      "missing": 0,
+      "valid": 600
+    }
+  },
+  "code": {
+    "git_commit": "8ad6afbc586014083f77af81b5703e53e1beadc3",
+    "project_version": "0.1.0",
+    "source_sha256": {
+      "src/quality_uncertainty_medrag/aggregation.py": "66a456b5cbbe8769c587d1a32f4439ad2911760e29e344b5c9786cee742bde21",
+      "src/quality_uncertainty_medrag/quality.py": "c5df5ed8a4f0179f31964fa28a40b1d72aac35c17564943280524e605e739e6c",
+      "src/quality_uncertainty_medrag/stance_self_consistency.py": "ecf27e986dd991a0f9b0d1c0bb78cc074e0d533c53fa7e360549f62e7c6ab77a",
+      "src/quality_uncertainty_medrag/stance_uncertainty_evaluation.py": "551ae1cc0684d1accb5aa3dfa2c665f9a0108d2bdc4c62f9148072cd8db8ad1e",
+      "src/quality_uncertainty_medrag/uncertainty_aggregation.py": "16ea14589fdf756462c61967eb05baf793ad2314e73aeeee03db6b03a51f4eb9"
+    }
+  },
+  "complete_pair_count": 60,
+  "evaluated_pair_count": 60,
+  "frozen_configuration": {
+    "classifier_version": "llm-medical-stance-v1",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "frozen_hard_settings": {
+      "seed": 42,
+      "temperature": 0,
+      "thinking": true
+    },
+    "model": "qwen3:8b",
+    "ollama_version": "0.34.4",
+    "prompt_template_sha256": "c9db305b4c2a7ec23700851c332f8109c9d2e3b62efd83e9eb1c50520670886a",
+    "reference_sha256": "ae5d55ef412fa5a33997108fdebd36b13fa017953ca5281a36a3deeb5806065d",
+    "sample_count_per_pair": 10,
+    "sample_version": "qwen-v1-self-consistency-10-v1",
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110
+    ],
+    "temperature": 0.7,
+    "thinking": true,
+    "unlabeled_input_sha256": "3c8260a38c4df1640ab9d654b05e2ff917b744ac613a559fa66446fc856d67b0"
+  },
+  "incomplete_pair_count": 0,
+  "metric_definitions": {
+    "auroc": "Pairwise ranking probability; exact score ties receive half credit.",
+    "average_precision": "Stepwise average precision with identical uncertainty scores grouped.",
+    "coverage_rounding": "retained count is ceil(n * requested coverage)",
+    "empirical_probabilities": "ten-seed relative frequencies; not calibrated probabilities",
+    "error_prevalence_baseline": "fraction of evaluable completed pairs with error=1",
+    "positive_class": "error=1 when frozen Qwen-v1 hard stance != adjudicated reference stance",
+    "relevance": "1 - p_irrelevant",
+    "score_direction": "higher uncertainty predicts error",
+    "selective_accuracy": "accuracy after retaining the lowest-uncertainty pairs at prespecified coverage",
+    "u_3": "normalized three-class entropy: -sum(p_i log p_i)/log(3)",
+    "u_directional": "binary entropy after conditioning on SUPPORT or CONTRADICT; 1 when directional mass is zero",
+    "zero_directional_contribution": "directional_score=0 when all ten samples are IRRELEVANT"
+  },
+  "mode": "FINAL_EVALUATION",
+  "partial_final_flag": "final",
+  "reference": {
+    "hard_prediction_path": "outputs/stance_model_comparison/reference_60_adjudicated/predictions_60.csv",
+    "hard_prediction_rows": 60,
+    "hard_prediction_sha256": "7db186d8447211d350fc1fdc1e035a1a1d8bd1ad60879b7704850210f7111618",
+    "missing_hard_labels": 0,
+    "missing_reference_labels": 0,
+    "path": "outputs/stance_annotation/dev_1_30/stance_reference_60_adjudicated.csv",
+    "provenance": "AI-assisted adjudicated stance reference set; not independent clinician annotation",
+    "reference_rows": 60,
+    "sha256": "ae5d55ef412fa5a33997108fdebd36b13fa017953ca5281a36a3deeb5806065d"
+  },
+  "reference_label_isolation": {
+    "checks": {
+      "dev_31_50_accessed": false,
+      "hard_prediction_file_opened_during_sampling": false,
+      "medqa_gold_or_other_options_passed": false,
+      "model_payload_contains_reference": false,
+      "prompt_fields_match_allowlist": true,
+      "reference_opened_during_sampling": false,
+      "unlabeled_input_fields_match_allowlist": true
+    },
+    "passed": true,
+    "source": "checkpoint leakage_audit.json plus validated input/prompt allowlists"
+  },
+  "research_integrity": {
+    "aggregation_weights_or_formulas_modified": false,
+    "dev_31_50_accessed": false,
+    "frozen_hard_stance_modified": false,
+    "new_model_inference_run": false,
+    "reference_labels_modified": false,
+    "stochastic_samples_modified": false,
+    "thresholds_optimized": false
+  },
+  "timestamp_source": "source checkpoint manifest (used for deterministic reruns)"
+}
