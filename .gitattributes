@@ -1,0 +1,8 @@
+# Preserve frozen text-file SHA256 identities across Windows/Linux checkouts.
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.ipynb text eol=lf
+*.md text eol=lf

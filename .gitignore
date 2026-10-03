@@ -18,3 +18,53 @@ cloud/kaggle_upload.zip
 .env.*
 kaggle.json
 access_token
+
+# Private research inputs and local caches (synthetic fixtures remain visible)
+/data/raw/
+/data/processed/
+/data/retrieved/
+/data/query_overrides/
+/data/stance_smoke/
+.cache/
+caches/
+.venv*/
+
+# Model weights and generated cloud archives/state
+*.gguf
+*.ggml
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.bin
+/model_weights/
+/cloud/checkpoint/
+/cloud/backups/
+/cloud/*.zip
+/cloud/*.zip.sha256
+
+# Local credentials and private keys
+credentials.json
+client_secret*.json
+service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+.aws/
+.ssh/
+
+# Editor state and temporary test directories
+.vscode/
+.pytest*/
+.tmp*/
+/tmp/
+/temp/
+/t/
+/t[0-9]*/
+
+# M2 source snapshot is public; restored/generated results remain private
+/research/aggregation_ablation/matched_60_generation_free_v1/*.csv
+/research/aggregation_ablation/matched_60_generation_free_v1/manifest.json
+/research/aggregation_ablation/matched_60_generation_free_v1/ablation_summary.md
