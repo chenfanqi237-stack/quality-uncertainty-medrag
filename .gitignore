@@ -44,6 +44,19 @@ caches/
 /cloud/*.zip
 /cloud/*.zip.sha256
 
+# Private post-Dev30 review deliveries and nested migration archives
+/reviewer_delivery/
+/cloud/migration/
+/cloud/portable_dev30/
+**/blind_review*/
+**/*mapping_private.*
+**/private_pair_mapping.*
+*.zip
+*.zip.sha256
+# Local manuscript snapshots and exported binary research artifacts
+/paper/
+*.pdf
+
 # Local credentials and private keys
 credentials.json
 client_secret*.json
